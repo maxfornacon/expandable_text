@@ -41,6 +41,7 @@ class ExpandableText extends StatefulWidget {
     this.animationDuration,
     this.animationCurve,
     this.semanticsLabel,
+    this.isSelectable = false
   })  : assert(maxLines > 0),
         super(key: key);
 
@@ -73,6 +74,7 @@ class ExpandableText extends StatefulWidget {
   final Duration? animationDuration;
   final Curve? animationCurve;
   final String? semanticsLabel;
+  final bool? isSelectable;
 
   @override
   ExpandableTextState createState() => ExpandableTextState();
@@ -271,14 +273,22 @@ class ExpandableTextState extends State<ExpandableText>
           textSpan = content;
         }
 
-        final richText = RichText(
-          text: textSpan,
-          softWrap: true,
-          textDirection: textDirection,
-          textAlign: textAlign,
-          textScaleFactor: textScaleFactor,
-          overflow: TextOverflow.clip,
-        );
+        final richText = widget.isSelectable!
+            ? SelectableText.rich(
+              textSpan,
+              textDirection: textDirection,
+              textAlign: textAlign,
+              textScaleFactor: textScaleFactor,
+              style: TextStyle(overflow: TextOverflow.clip),
+            )
+            : RichText(
+              text: textSpan,
+              softWrap: true,
+              textDirection: textDirection,
+              textAlign: textAlign,
+              textScaleFactor: textScaleFactor,
+              overflow: TextOverflow.clip,
+            );
 
         if (widget.animation) {
           return AnimatedSize(
